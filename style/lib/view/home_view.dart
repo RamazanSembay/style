@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:style/view/information_view.dart';
 import 'package:style/view/login_view.dart';
 
 import 'package:intl/intl.dart';
@@ -105,6 +106,13 @@ class _HomeViewState extends State<HomeView> {
                           image:
                               'https://cdnkz.ostin.com/upload/mdm/media_content/resize/50e/686_950_c73f/63746840299.jpg',
                           text: 'Әйелдер',
+                          onTap: () {
+                            // on information
+                            Get.to(InformationView(
+                              title: 'Әйелдер',
+                              collectionPath: 'Әйелдер',
+                            ));
+                          },
                         ),
 
                         // mens
@@ -113,6 +121,13 @@ class _HomeViewState extends State<HomeView> {
                           image:
                               'https://cdnkz.ostin.com/upload/mdm/media_content/resize/09c/332_460_3af3/63893530299.jpg',
                           text: 'Ерлер',
+                          onTap: () {
+                            // on information
+                            Get.to(InformationView(
+                              title: 'Ерлер',
+                              collectionPath: 'Ерлер',
+                            ));
+                          },
                         ),
 
                         // girl
@@ -120,6 +135,13 @@ class _HomeViewState extends State<HomeView> {
                           image:
                               'https://cdnkz.ostin.com/upload/mdm/media_content/resize/1af/686_950_73d6/62031260299.jpg',
                           text: 'Қыздар',
+                          onTap: () {
+                            // on information
+                            Get.to(InformationView(
+                              title: 'Қыздар',
+                              collectionPath: 'Қыздар',
+                            ));
+                          },
                         ),
 
                         // boy
@@ -127,6 +149,13 @@ class _HomeViewState extends State<HomeView> {
                           image:
                               'https://cdnkz.ostin.com/upload/mdm/media_content/resize/69f/686_950_2338/61922450299.jpg',
                           text: 'Ұлдар',
+                          onTap: () {
+                            // on information
+                            Get.to(InformationView(
+                              title: 'Ұлдар',
+                              collectionPath: 'Ұлдар',
+                            ));
+                          },
                         ),
                       ],
                     ),
@@ -154,10 +183,19 @@ class _HomeViewState extends State<HomeView> {
                                 fontFamily: 'Montserrat',
                               ),
                             ),
-                            Icon(
-                              Icons.navigate_next,
-                              size: 34,
-                              color: Colors.black,
+                            InkWell(
+                              onTap: () {
+                                // on information
+                                Get.to(InformationView(
+                                  title: 'Қазір Трендте',
+                                  collectionPath: 'Қазір Трендте',
+                                ));
+                              },
+                              child: Icon(
+                                Icons.navigate_next,
+                                size: 34,
+                                color: Colors.black,
+                              ),
                             ),
                           ],
                         ),
@@ -177,40 +215,45 @@ class _HomeViewState extends State<HomeView> {
                     Container(
                       height: 240,
                       width: double.infinity,
-                      child: ListView(
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                      child: FutureBuilder<QuerySnapshot>(
+                        future: FirebaseFirestore.instance
+                            .collection('Қазір Трендте')
+                            .get(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Something went wrong');
+                          }
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data.docs.length,
+                            itemBuilder: (context, index) {
+                              var data = snapshot.data.docs[index];
+                              return Row(
                                 children: [
                                   Trend(
-                                    image:
-                                        'https://image.12storeez.com/images/720xP_90_out/uploads/images/LookBook/15-3-22/623050f92c64c-06-000007870033.jpg',
-                                    text: 'Кардиган на молнии',
-                                    price: 16500,
+                                    image: data['Картинка'],
+                                    text: data['Название'],
+                                    price: data['Цена'],
+                                    onTap: () {},
                                   ),
-                                  Trend(
-                                    image:
-                                        'https://image.12storeez.com/images/720xP_90_out/uploads/images/LookBook/15-3-22/6230511499094-06-000007870009.jpg',
-                                    text: 'Рубашка льняная',
-                                    price: 9800,
-                                  ),
-                                  Trend(
-                                      image:
-                                          'https://image.12storeez.com/images/720xP_90_out/uploads/images/LookBook/15-3-22/623051303c71c-08-000008010018.jpg',
-                                      text: 'Толстовка',
-                                      price: 7980),
                                 ],
-                              ),
-                            ],
-                          ),
-                        ],
+                              );
+                            },
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -239,10 +282,19 @@ class _HomeViewState extends State<HomeView> {
                                 fontFamily: 'Montserrat',
                               ),
                             ),
-                            Icon(
-                              Icons.navigate_next,
-                              size: 34,
-                              color: Colors.black,
+                            InkWell(
+                              onTap: () {
+                                // on information
+                                Get.to(InformationView(
+                                  title: 'Ерлерге',
+                                  collectionPath: 'Ерлерге',
+                                ));
+                              },
+                              child: Icon(
+                                Icons.navigate_next,
+                                size: 34,
+                                color: Colors.black,
+                              ),
                             ),
                           ],
                         ),
@@ -262,40 +314,45 @@ class _HomeViewState extends State<HomeView> {
                     Container(
                       height: 240,
                       width: double.infinity,
-                      child: ListView(
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                      child: FutureBuilder<QuerySnapshot>(
+                        future: FirebaseFirestore.instance
+                            .collection('Ерлерге')
+                            .get(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Something went wrong');
+                          }
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data.docs.length,
+                            itemBuilder: (context, index) {
+                              var data = snapshot.data.docs[index];
+                              return Row(
                                 children: [
                                   Trend(
-                                    image:
-                                        'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/mens-collection/114559/6284e771e5511-11-05-20221839.jpg',
-                                    text: 'Рубашка льняная',
-                                    price: 9980,
+                                    image: data['Картинка'],
+                                    text: data['Название'],
+                                    price: data['Цена'],
+                                    onTap: () {},
                                   ),
-                                  Trend(
-                                    image:
-                                        'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/mens-collection/114219/627b783cc672c-04-05-20220464.jpg',
-                                    text: 'Брюки свободные со складками',
-                                    price: 9890,
-                                  ),
-                                  Trend(
-                                      image:
-                                          'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/mens-collection/114211/627b740c21f9b-04-05-20220079.jpg',
-                                      text: 'Шорты свободные со складками',
-                                      price: 7980),
                                 ],
-                              ),
-                            ],
-                          ),
-                        ],
+                              );
+                            },
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -325,10 +382,19 @@ class _HomeViewState extends State<HomeView> {
                                 fontFamily: 'Montserrat',
                               ),
                             ),
-                            Icon(
-                              Icons.navigate_next,
-                              size: 34,
-                              color: Colors.black,
+                            InkWell(
+                              onTap: () {
+                                // on information
+                                Get.to(InformationView(
+                                  title: 'Әйелдерге',
+                                  collectionPath: 'Әйелдерге',
+                                ));
+                              },
+                              child: Icon(
+                                Icons.navigate_next,
+                                size: 34,
+                                color: Colors.black,
+                              ),
                             ),
                           ],
                         ),
@@ -348,41 +414,45 @@ class _HomeViewState extends State<HomeView> {
                     Container(
                       height: 240,
                       width: double.infinity,
-                      child: ListView(
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                      child: FutureBuilder<QuerySnapshot>(
+                        future: FirebaseFirestore.instance
+                            .collection('Әйелдерге')
+                            .get(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Something went wrong');
+                          }
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data.docs.length,
+                            itemBuilder: (context, index) {
+                              var data = snapshot.data.docs[index];
+                              return Row(
                                 children: [
                                   Trend(
-                                    image:
-                                        'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/jackets/114186/6295bcbf587a5-20-05-20229870.jpg',
-                                    text: 'Жакет льняной двубортный',
-                                    price: 15980,
-                                  ),
-                                  Trend(
-                                    image:
-                                        'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/trousers/114425/62953828f072e-20-05-20229478.jpg',
-                                    text: 'Брюки льняные в мужском стиле',
-                                    price: 10980,
-                                  ),
-                                  Trend(
-                                    image:
-                                        'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/trousers/113828/6280dfda9b8dc-13-05-20223711.jpg',
-                                    text: 'Шорты джинсовые мини',
-                                    price: 6980,
+                                    image: data['Картинка'],
+                                    text: data['Название'],
+                                    price: data['Цена'],
+                                    onTap: () {},
                                   ),
                                 ],
-                              ),
-                            ],
-                          ),
-                        ],
+                              );
+                            },
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -400,46 +470,51 @@ class _HomeViewState extends State<HomeView> {
 class Category extends StatelessWidget {
   final String image;
   final String text;
+  final Function onTap;
 
-  const Category({Key key, this.image, this.text}) : super(key: key);
+  const Category({Key key, this.image, this.text, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: [
-          Container(
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-              color: Color(0xffF9D264),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(7.0),
-              child: ClipRRect(
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          children: [
+            Container(
+              height: 60,
+              width: 60,
+              decoration: BoxDecoration(
+                color: Color(0xffF9D264),
                 borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  image,
-                  height: 45.0,
-                  width: 45.0,
-                  fit: BoxFit.cover,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(7.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.network(
+                    image,
+                    height: 45.0,
+                    width: 45.0,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 10),
-          Text(
-            text,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
-              fontFamily: 'Montserrat',
+            SizedBox(height: 10),
+            Text(
+              text,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Montserrat',
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -449,56 +524,61 @@ class Trend extends StatelessWidget {
   final String image;
   final String text;
   final int price;
+  final Function onTap;
 
-  const Trend({Key key, this.image, this.text, this.price}) : super(key: key);
+  const Trend({Key key, this.image, this.text, this.price, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              Container(
-                child: Image(
-                  image: NetworkImage(image),
-                  height: 130,
-                  width: 100,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                width: 150,
-                height: 40,
-                child: Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Montserrat',
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                Container(
+                  child: Image(
+                    image: NetworkImage(image),
+                    height: 130,
+                    width: 100,
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 15),
-          Text(
-            price.toString() + ' ₸',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
-              fontFamily: 'Montserrat',
+                SizedBox(height: 10),
+                Container(
+                  width: 150,
+                  height: 40,
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+            SizedBox(height: 15),
+            Text(
+              price.toString() + ' ₸',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Montserrat',
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
