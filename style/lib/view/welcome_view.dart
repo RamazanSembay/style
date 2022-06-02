@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:style/view/auth_view.dart';
 import 'package:style/view/login_view.dart';
 
 class WelcomeView extends StatelessWidget {
@@ -52,8 +53,8 @@ class WelcomeView extends StatelessWidget {
                   SizedBox(height: 50),
                   InkWell(
                     onTap: () {
-                      // on login
-                      Get.to(LoginView());
+                      // on auth
+                      Get.to(AuthView());
                     },
                     child: Container(
                       height: 60,
