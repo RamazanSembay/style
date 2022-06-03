@@ -87,81 +87,79 @@ class _FavoriteViewState extends State<FavoriteView> {
                       ],
                     ),
                   )
-                : Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Container(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: BouncingScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          itemCount: favoriteProvider.getFavoriteList.length,
-                          itemBuilder: (context, index) {
-                            var data = favoriteProvider.getFavoriteList[index];
-                            return Product(
-                              id: data.id,
-                              image: data.image,
-                              text: data.text,
-                              price: data.price,
-                              addFavoriteCart: () {
-                                // add favorite cart
-                                FirebaseFirestore.instance
-                                    .collection('Себет')
-                                    .doc(FirebaseAuth.instance.currentUser.uid)
-                                    .collection('Себет')
-                                    .doc(data.id)
-                                    .set({
-                                  'Id': data.id,
-                                  'Название': data.text,
-                                  'Картинка': data.image,
-                                  'Цена': data.price,
-                                  'Описание': data.description,
-                                  'Количество': 1
-                                });
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: favoriteProvider.getFavoriteList.length,
+                        itemBuilder: (context, index) {
+                          var data = favoriteProvider.getFavoriteList[index];
+                          return Product(
+                            id: data.id,
+                            image: data.image,
+                            text: data.text,
+                            price: data.price,
+                            addFavoriteCart: () {
+                              // add favorite cart
+                              FirebaseFirestore.instance
+                                  .collection('Себет')
+                                  .doc(FirebaseAuth.instance.currentUser.uid)
+                                  .collection('Себет')
+                                  .doc(data.id)
+                                  .set({
+                                'Id': data.id,
+                                'Название': data.text,
+                                'Картинка': data.image,
+                                'Цена': data.price,
+                                'Описание': data.description,
+                                'Количество': 1
+                              });
 
-                                Get.snackbar(
-                                  'Себет',
-                                  'Сіз тауарды себетке қостыңыз ' + data.text,
-                                  icon: Icon(Icons.delete, color: Colors.black),
-                                  snackPosition: SnackPosition.TOP,
-                                  backgroundColor: Color(0xffFFDB53),
-                                  borderRadius: 5,
-                                  margin: EdgeInsets.all(15),
-                                  colorText: Colors.black,
-                                  duration: Duration(seconds: 3),
-                                  isDismissible: true,
-                                  dismissDirection: DismissDirection.horizontal,
-                                  forwardAnimationCurve: Curves.easeOutBack,
-                                );
-                              },
-                              deleteFavoriteCart: () {
-                                // favorite delete
+                              Get.snackbar(
+                                'Ұнаған',
+                                'Сіз тауарды ұнағанан өшірдіңіз ' + data.text,
+                                icon: Icon(Icons.add, color: Colors.black),
+                                snackPosition: SnackPosition.TOP,
+                                backgroundColor: Color(0xffFFDB53),
+                                borderRadius: 5,
+                                margin: EdgeInsets.all(15),
+                                colorText: Colors.black,
+                                duration: Duration(seconds: 3),
+                                isDismissible: true,
+                                dismissDirection: DismissDirection.horizontal,
+                                forwardAnimationCurve: Curves.easeOutBack,
+                              );
+                            },
+                            deleteFavoriteCart: () {
+                              // favorite delete
 
-                                FirebaseFirestore.instance
-                                    .collection('Ұнағандар')
-                                    .doc(FirebaseAuth.instance.currentUser.uid)
-                                    .collection('Ұнағандар')
-                                    .doc(data.id)
-                                    .delete();
+                              FirebaseFirestore.instance
+                                  .collection('Ұнағандар')
+                                  .doc(FirebaseAuth.instance.currentUser.uid)
+                                  .collection('Ұнағандар')
+                                  .doc(data.id)
+                                  .delete();
 
-                                Get.snackbar(
-                                  "Себет",
-                                  "Себеттен Өшірдім",
-                                  icon: Icon(Icons.delete, color: Colors.black),
-                                  snackPosition: SnackPosition.TOP,
-                                  backgroundColor: Color(0xffFFDB53),
-                                  borderRadius: 5,
-                                  margin: EdgeInsets.all(15),
-                                  colorText: Colors.black,
-                                  duration: Duration(seconds: 3),
-                                  isDismissible: true,
-                                  dismissDirection: DismissDirection.horizontal,
-                                  forwardAnimationCurve: Curves.easeOutBack,
-                                );
-                              },
-                            );
-                          },
-                        ),
+                              Get.snackbar(
+                                "Себет",
+                                "Себеттен Өшірдім",
+                                icon: Icon(Icons.delete, color: Colors.black),
+                                snackPosition: SnackPosition.TOP,
+                                backgroundColor: Color(0xffFFDB53),
+                                borderRadius: 5,
+                                margin: EdgeInsets.all(15),
+                                colorText: Colors.black,
+                                duration: Duration(seconds: 3),
+                                isDismissible: true,
+                                dismissDirection: DismissDirection.horizontal,
+                                forwardAnimationCurve: Curves.easeOutBack,
+                              );
+                            },
+                          );
+                        },
                       ),
                     ),
                   ),

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:style/view/edit_view.dart';
 import 'package:style/view/home_view.dart';
+import 'package:style/view/my_product_view.dart';
+import 'package:style/view/my_success_view.dart';
 
 class ProfileView extends StatefulWidget {
   @override
@@ -199,7 +201,10 @@ class _ProfileViewState extends State<ProfileView> {
                   children: [
                     // Менің төлемдерім
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        // on success
+                        Get.to(MySuccessView());
+                      },
                       child: Row(
                         children: [
                           Image(
@@ -243,7 +248,10 @@ class _ProfileViewState extends State<ProfileView> {
 
                     // Менің тапсырыстарым
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        // on my product
+                        Get.to(MyProductView());
+                      },
                       child: Row(
                         children: [
                           Image(

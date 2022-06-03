@@ -317,6 +317,38 @@ class _NavState extends State<Nav> {
               InkWell(
                 onTap: () {
                   // on success
+                  FirebaseFirestore.instance
+                      .collection('Себет')
+                      .doc(FirebaseAuth.instance.currentUser.uid)
+                      .set({
+                    "Id": FirebaseAuth.instance.currentUser.uid,
+                    "Имя": vendorData != null ? vendorData.data()['Имя'] : '',
+                    "Почта":
+                        vendorData != null ? vendorData.data()['Почта'] : '',
+                    "Город":
+                        vendorData != null ? vendorData.data()['Город'] : '',
+                    "Адрес":
+                        vendorData != null ? vendorData.data()['Адрес'] : '',
+                    "Дом": vendorData != null ? vendorData.data()['Дом'] : '',
+                    "Сумма товара": totalPrice,
+                    "Количество товара": quantity,
+                    "Дата заказ": DateTime.now(),
+                  });
+
+                  Get.snackbar(
+                    "Тапсырыс",
+                    "Тапсырысыңыз қабылданды",
+                    icon: Icon(Icons.local_shipping, color: Colors.white),
+                    snackPosition: SnackPosition.TOP,
+                    backgroundColor: Colors.black,
+                    borderRadius: 5,
+                    margin: EdgeInsets.all(15),
+                    colorText: Colors.white,
+                    duration: Duration(seconds: 3),
+                    isDismissible: true,
+                    dismissDirection: DismissDirection.horizontal,
+                    forwardAnimationCurve: Curves.easeOutBack,
+                  );
                   Get.to(SuccessView());
                 },
                 child: Container(
