@@ -72,7 +72,7 @@ class _FavoriteViewState extends State<FavoriteView> {
                       children: [
                         SizedBox(height: 50),
                         SvgPicture.asset(
-                          'images/empty.svg',
+                          'images/favorite.svg',
                           width: 130.0,
                           height: 130.0,
                         ),
@@ -133,6 +133,31 @@ class _FavoriteViewState extends State<FavoriteView> {
                                   forwardAnimationCurve: Curves.easeOutBack,
                                 );
                               },
+                              deleteFavoriteCart: () {
+                                // favorite delete
+
+                                FirebaseFirestore.instance
+                                    .collection('Ұнағандар')
+                                    .doc(FirebaseAuth.instance.currentUser.uid)
+                                    .collection('Ұнағандар')
+                                    .doc(data.id)
+                                    .delete();
+
+                                Get.snackbar(
+                                  "Себет",
+                                  "Себеттен Өшірдім",
+                                  icon: Icon(Icons.delete, color: Colors.black),
+                                  snackPosition: SnackPosition.TOP,
+                                  backgroundColor: Color(0xffFFDB53),
+                                  borderRadius: 5,
+                                  margin: EdgeInsets.all(15),
+                                  colorText: Colors.black,
+                                  duration: Duration(seconds: 3),
+                                  isDismissible: true,
+                                  dismissDirection: DismissDirection.horizontal,
+                                  forwardAnimationCurve: Curves.easeOutBack,
+                                );
+                              },
                             );
                           },
                         ),
@@ -153,6 +178,7 @@ class Product extends StatefulWidget {
   final int price;
 
   final Function addFavoriteCart;
+  final Function deleteFavoriteCart;
 
   const Product({
     Key key,
@@ -161,6 +187,7 @@ class Product extends StatefulWidget {
     this.text,
     this.price,
     this.addFavoriteCart,
+    this.deleteFavoriteCart,
   }) : super(key: key);
 
   @override
@@ -204,27 +231,40 @@ class _ProductState extends State<Product> {
                           fontFamily: 'Montserrat',
                         ),
                       ),
-                      InkWell(
-                        onTap: widget.addFavoriteCart,
-                        child: Container(
-                          height: 30,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            color: Color(0xffFFDB53),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Себетке қосу',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Montserrat',
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: widget.addFavoriteCart,
+                            child: Container(
+                              height: 30,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: Color(0xffFFDB53),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Себетке қосу',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Montserrat',
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                          SizedBox(width: 20),
+                          InkWell(
+                            onTap: widget.deleteFavoriteCart,
+                            child: Icon(
+                              Icons.delete,
+                              size: 24,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
