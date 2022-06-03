@@ -22,11 +22,11 @@ class _SearchViewState extends State<SearchView> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 40),
+          SizedBox(height: 50),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              'Өзіңіз қалаған нәрсені іздеңіз',
+              'Өзіңіздің қалаған нәрсені іздеңіз',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
@@ -111,7 +111,13 @@ class _SearchViewState extends State<SearchView> {
                               price: data['Цена'],
                               onTap: () {
                                 // on detail
-                                Get.to(DetailView());
+                                Get.to(DetailView(
+                                  id: data['Id'],
+                                  image: data['Картинка'],
+                                  text: data['Название'],
+                                  price: data['Цена'],
+                                  description: data['Описание'],
+                                ));
                               },
                             );
                           },

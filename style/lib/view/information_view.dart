@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 import 'package:intl/intl.dart';
+import 'package:style/view/detail_view.dart';
 
 class InformationView extends StatefulWidget {
   final String title;
@@ -66,7 +68,6 @@ class _InformationViewState extends State<InformationView> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
-                height: 350,
                 child: Column(
                   children: [
                     FutureBuilder<QuerySnapshot>(
@@ -96,62 +97,22 @@ class _InformationViewState extends State<InformationView> {
                           crossAxisSpacing: 15.0,
                           itemBuilder: (context, index) {
                             var data = snapshot.data.docs[index];
-                            return InkWell(
-                              onTap: () {},
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Container(
-                                          child: Image(
-                                            image:
-                                                NetworkImage(data['Картинка']),
-                                            height: 150,
-                                            width: 120,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        Container(
-                                          width: double.infinity,
-                                          child: Text(
-                                            data['Название'],
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Montserrat',
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 20),
-                                    Text(
-                                      '${formatter.format(data['Цена'].toInt()) + ' ₸'}'
-                                          .replaceAll(',', ' '),
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+
+                            return InfoProduct(
+                              image: data['Картинка'],
+                              text: data['Название'],
+                              price: data['Цена'],
+                              onTap: () {
+                                // on detail
+                                Get.to(DetailView(
+                                  id: data['Id'],
+                                  image: data['Картинка'],
+                                  text: data['Название'],
+                                  price: data['Цена'],
+                                  description: data['Описание'],
+                                ));
+                              },
                             );
-                            // return Trend(
-                            //   image: data['Картинка'],
-                            //   text: data['Название'],
-                            //   price: data['Цена'],
-                            //   onTap: () {},
-                            // );
                           },
                         );
                       },
@@ -168,21 +129,23 @@ class _InformationViewState extends State<InformationView> {
   }
 }
 
-class Trend extends StatelessWidget {
+class InfoProduct extends StatelessWidget {
   final String image;
   final String text;
   final int price;
   final Function onTap;
 
-  const Trend({Key key, this.image, this.text, this.price, this.onTap})
+  const InfoProduct({Key key, this.image, this.text, this.price, this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var formatter = NumberFormat('#,###');
+
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -192,19 +155,17 @@ class Trend extends StatelessWidget {
                 Container(
                   child: Image(
                     image: NetworkImage(image),
-                    height: 130,
-                    width: 100,
+                    height: 150,
+                    width: 120,
                     fit: BoxFit.cover,
                   ),
                 ),
                 SizedBox(height: 10),
                 Container(
-                  width: 150,
-                  height: 40,
+                  width: double.infinity,
                   child: Text(
                     text,
                     textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
@@ -215,9 +176,9 @@ class Trend extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 15),
+            SizedBox(height: 20),
             Text(
-              price.toString() + ' ₸',
+              '${formatter.format(price.toInt()) + ' ₸'}'.replaceAll(',', ' '),
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 15,

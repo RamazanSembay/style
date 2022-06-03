@@ -1,8 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
 
 class DetailView extends StatefulWidget {
+  final String id;
+  final String image;
+  final String text;
+  final String description;
+  final int price;
+
+  const DetailView(
+      {Key key, this.id, this.image, this.text, this.price, this.description})
+      : super(key: key);
+
   @override
   State<DetailView> createState() => _DetailViewState();
 }
@@ -13,7 +26,33 @@ class _DetailViewState extends State<DetailView> {
     var formatter = NumberFormat('#,###');
 
     return Scaffold(
-      bottomNavigationBar: DetailNav(),
+      bottomNavigationBar: DetailNav(
+        text: widget.price,
+        onTap: () {
+          // on cart
+          FirebaseFirestore.instance
+              .collection('Себет')
+              .doc(FirebaseAuth.instance.currentUser.uid)
+              .collection('Себет')
+              .doc(widget.id)
+              .set({
+            'Id': widget.id,
+            'Название': widget.text,
+            'Картинка': widget.image,
+            'Цена': widget.price,
+            'Описание': widget.description,
+            'Количество': 1
+          });
+
+          Get.snackbar(
+            'Себет',
+            'Сіз тауарды себетке қостыңыз $widget.name',
+            snackPosition: SnackPosition.TOP,
+            colorText: Colors.white,
+            backgroundColor: Colors.black87,
+          );
+        },
+      ),
       backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,8 +102,7 @@ class _DetailViewState extends State<DetailView> {
                   height: 250,
                   width: 200,
                   child: Image(
-                    image: NetworkImage(
-                        'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/mens-collection/113211/62879d28c9bdc-18-05-20226034.jpg'),
+                    image: NetworkImage(widget.image),
                     fit: BoxFit.cover,
                     height: 250,
                     width: 200,
@@ -81,14 +119,18 @@ class _DetailViewState extends State<DetailView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Толстовка',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Montserrat',
+                    Expanded(
+                      child: Container(
+                        child: Text(
+                          widget.text,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
                       ),
                     ),
                     InkWell(
@@ -107,7 +149,8 @@ class _DetailViewState extends State<DetailView> {
                 Column(
                   children: [
                     Text(
-                      'Состав: 100% Хлопок Параметры модели: 185/92/70/90 На модели размер L',
+                      widget.description,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
                         color: Color(0xff999999),
                         fontSize: 18,
@@ -127,6 +170,11 @@ class _DetailViewState extends State<DetailView> {
 }
 
 class DetailNav extends StatelessWidget {
+  final int text;
+  final Function onTap;
+
+  const DetailNav({Key key, this.text, this.onTap}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var formatter = NumberFormat('#,###');
@@ -143,7 +191,7 @@ class DetailNav extends StatelessWidget {
                 child: Container(
                   child: Center(
                     child: Text(
-                      '${formatter.format(5200.toInt()) + ' ₸'}'
+                      '${formatter.format(text.toInt()) + ' ₸'}'
                           .replaceAll(',', ' '),
                       style: TextStyle(
                         color: Colors.black,
@@ -157,9 +205,7 @@ class DetailNav extends StatelessWidget {
               ),
               Expanded(
                 child: InkWell(
-                  onTap: () {
-                    // on cart
-                  },
+                  onTap: onTap,
                   child: Container(
                     child: Center(
                       child: Column(

@@ -250,7 +250,13 @@ class _HomeViewState extends State<HomeView> {
                                     price: data['Цена'],
                                     onTap: () {
                                       // on detail
-                                      Get.to(DetailView());
+                                      Get.to(DetailView(
+                                        id: data['Id'],
+                                        image: data['Картинка'],
+                                        text: data['Название'],
+                                        price: data['Цена'],
+                                        description: data['Описание'],
+                                      ));
                                     },
                                   ),
                                 ],
@@ -350,7 +356,16 @@ class _HomeViewState extends State<HomeView> {
                                     image: data['Картинка'],
                                     text: data['Название'],
                                     price: data['Цена'],
-                                    onTap: () {},
+                                    onTap: () {
+                                      // on detail
+                                      Get.to(DetailView(
+                                        id: data['Id'],
+                                        image: data['Картинка'],
+                                        text: data['Название'],
+                                        price: data['Цена'],
+                                        description: data['Описание'],
+                                      ));
+                                    },
                                   ),
                                 ],
                               );
@@ -450,7 +465,16 @@ class _HomeViewState extends State<HomeView> {
                                     image: data['Картинка'],
                                     text: data['Название'],
                                     price: data['Цена'],
-                                    onTap: () {},
+                                    onTap: () {
+                                      // on detail
+                                      Get.to(DetailView(
+                                        id: data['Id'],
+                                        image: data['Картинка'],
+                                        text: data['Название'],
+                                        price: data['Цена'],
+                                        description: data['Описание'],
+                                      ));
+                                    },
                                   ),
                                 ],
                               );
