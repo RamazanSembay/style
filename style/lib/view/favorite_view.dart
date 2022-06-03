@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/favorite_provider.dart';
@@ -99,6 +102,37 @@ class _FavoriteViewState extends State<FavoriteView> {
                               image: data.image,
                               text: data.text,
                               price: data.price,
+                              addFavoriteCart: () {
+                                // add favorite cart
+                                FirebaseFirestore.instance
+                                    .collection('Себет')
+                                    .doc(FirebaseAuth.instance.currentUser.uid)
+                                    .collection('Себет')
+                                    .doc(data.id)
+                                    .set({
+                                  'Id': data.id,
+                                  'Название': data.text,
+                                  'Картинка': data.image,
+                                  'Цена': data.price,
+                                  'Описание': data.description,
+                                  'Количество': 1
+                                });
+
+                                Get.snackbar(
+                                  'Себет',
+                                  'Сіз тауарды себетке қостыңыз ' + data.text,
+                                  icon: Icon(Icons.delete, color: Colors.black),
+                                  snackPosition: SnackPosition.TOP,
+                                  backgroundColor: Color(0xffFFDB53),
+                                  borderRadius: 5,
+                                  margin: EdgeInsets.all(15),
+                                  colorText: Colors.black,
+                                  duration: Duration(seconds: 3),
+                                  isDismissible: true,
+                                  dismissDirection: DismissDirection.horizontal,
+                                  forwardAnimationCurve: Curves.easeOutBack,
+                                );
+                              },
                             );
                           },
                         ),
@@ -118,12 +152,15 @@ class Product extends StatefulWidget {
   final String text;
   final int price;
 
+  final Function addFavoriteCart;
+
   const Product({
     Key key,
     this.id,
     this.image,
     this.text,
     this.price,
+    this.addFavoriteCart,
   }) : super(key: key);
 
   @override
@@ -165,6 +202,28 @@ class _ProductState extends State<Product> {
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                           fontFamily: 'Montserrat',
+                        ),
+                      ),
+                      InkWell(
+                        onTap: widget.addFavoriteCart,
+                        child: Container(
+                          height: 30,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            color: Color(0xffFFDB53),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Себетке қосу',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],

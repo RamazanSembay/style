@@ -46,10 +46,17 @@ class _DetailViewState extends State<DetailView> {
 
           Get.snackbar(
             'Себет',
-            'Сіз тауарды себетке қостыңыз $widget.name',
+            'Сіз тауарды себетке қостыңыз ' + widget.text,
+            icon: Icon(Icons.delete, color: Colors.black),
             snackPosition: SnackPosition.TOP,
-            colorText: Colors.white,
-            backgroundColor: Colors.black87,
+            backgroundColor: Color(0xffFFDB53),
+            borderRadius: 5,
+            margin: EdgeInsets.all(15),
+            colorText: Colors.black,
+            duration: Duration(seconds: 3),
+            isDismissible: true,
+            dismissDirection: DismissDirection.horizontal,
+            forwardAnimationCurve: Curves.easeOutBack,
           );
         },
       ),

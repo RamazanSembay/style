@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:style/view/detail_view.dart';
-import 'package:style/view/favotire_view.dart';
+import 'package:style/view/favorite_view.dart';
 import 'package:style/view/information_view.dart';
 import 'package:style/view/login_view.dart';
 
