@@ -1,40 +1,109 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:style/view/succes_view.dart';
 
-class TransactionView extends StatelessWidget {
+import '../provider/cart_provider.dart';
+import 'package:intl/intl.dart';
+
+class TransactionView extends StatefulWidget {
+  @override
+  State<TransactionView> createState() => _TransactionViewState();
+}
+
+class _TransactionViewState extends State<TransactionView> {
   @override
   Widget build(BuildContext context) {
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+    cartProvider.getCartData();
+
+    int totalPrice = cartProvider.subTotal();
+    int quantity = cartProvider.subTotal1();
+
+    if (cartProvider.getCartList.isEmpty) {
+      setState(() {
+        totalPrice = 0;
+      });
+    }
+
+    var formatter = NumberFormat('#,###');
+
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: Nav(),
-      body: ListView(
-        physics: BouncingScrollPhysics(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            children: [
-              SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        size: 24,
-                        color: Colors.black,
+          SizedBox(height: 40),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    size: 24,
+                    color: Colors.black,
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    child: Center(
+                      child: Text(
+                        'Операция',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                        ),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        child: Center(
-                          child: Text(
-                            'Операция',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 25),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  quantity.toString() + ' Дана',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: cartProvider.getCartList.isEmpty
+                  ? Center(
+                      child: Column(
+                        children: [
+                          SizedBox(height: 50),
+                          SvgPicture.asset(
+                            'images/empty.svg',
+                            width: 130.0,
+                            height: 130.0,
+                          ),
+                          SizedBox(height: 50),
+                          Text(
+                            'Себетке ешнарсе салған жоқсыз',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
@@ -42,50 +111,28 @@ class TransactionView extends StatelessWidget {
                               fontFamily: 'Montserrat',
                             ),
                           ),
-                        ),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: cartProvider.getCartList.length,
+                        itemBuilder: (context, index) {
+                          var data = cartProvider.cartList[index];
+
+                          return Product(
+                            image: data.image,
+                            text: data.text,
+                            price: data.price,
+                            count: data.count,
+                          );
+                        },
                       ),
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 25),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '4 Дана',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Montserrat',
-                      ),
-                    ),
-                    SizedBox(height: 25),
-                    Product(
-                      image:
-                          'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/trousers/113828/6280dfda9b8dc-13-05-20223711.jpg',
-                      text: 'Шорты джинсовые мини',
-                      price: 6980,
-                    ),
-                    Product(
-                      image:
-                          'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/trousers/113275/62827d1026dfc-13-05-20223052.jpg',
-                      text: 'Брюки прямые мужского кроя',
-                      price: 10980,
-                    ),
-                    Product(
-                      image:
-                          'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/trousers/113828/6280dfda9b8dc-13-05-20223711.jpg',
-                      text: 'Шорты джинсовые мини',
-                      price: 6980,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),
@@ -107,6 +154,7 @@ class Nav extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Ақпарат',
@@ -258,8 +306,10 @@ class Product extends StatelessWidget {
   final String image;
   final String text;
   final int price;
+  final int count;
 
-  const Product({Key key, this.image, this.text, this.price}) : super(key: key);
+  const Product({Key key, this.image, this.text, this.price, this.count})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -298,16 +348,12 @@ class Product extends StatelessWidget {
                         ),
                       ),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.remove_circle,
-                            size: 24,
-                            color: Colors.black,
-                          ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Text(
-                              '1',
+                              count.toString() + ' дана',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
@@ -315,11 +361,6 @@ class Product extends StatelessWidget {
                                 fontFamily: 'Montserrat',
                               ),
                             ),
-                          ),
-                          Icon(
-                            Icons.add_circle,
-                            size: 24,
-                            color: Colors.black,
                           ),
                         ],
                       ),

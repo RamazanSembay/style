@@ -88,32 +88,37 @@ class _InformationViewState extends State<InformationView> {
                           );
                         }
 
-                        return StaggeredGridView.countBuilder(
-                          shrinkWrap: true,
-                          crossAxisCount: 2,
-                          itemCount: snapshot.data.docs.length,
-                          staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                          mainAxisSpacing: 15.0,
-                          crossAxisSpacing: 15.0,
-                          itemBuilder: (context, index) {
-                            var data = snapshot.data.docs[index];
-
-                            return InfoProduct(
-                              image: data['Картинка'],
-                              text: data['Название'],
-                              price: data['Цена'],
-                              onTap: () {
-                                // on detail
-                                Get.to(DetailView(
-                                  id: data['Id'],
+                        return Expanded(
+                          child: Container(
+                            // height: 500,
+                            child: StaggeredGridView.countBuilder(
+                              shrinkWrap: true,
+                              crossAxisCount: 2,
+                              itemCount: snapshot.data.docs.length,
+                              staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                              mainAxisSpacing: 15.0,
+                              crossAxisSpacing: 15.0,
+                              itemBuilder: (context, index) {
+                                var data = snapshot.data.docs[index];
+                          
+                                return InfoProduct(
                                   image: data['Картинка'],
                                   text: data['Название'],
                                   price: data['Цена'],
-                                  description: data['Описание'],
-                                ));
+                                  onTap: () {
+                                    // on detail
+                                    Get.to(DetailView(
+                                      id: data['Id'],
+                                      image: data['Картинка'],
+                                      text: data['Название'],
+                                      price: data['Цена'],
+                                      description: data['Описание'],
+                                    ));
+                                  },
+                                );
                               },
-                            );
-                          },
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -122,7 +127,7 @@ class _InformationViewState extends State<InformationView> {
               ),
             ),
           ),
-          SizedBox(height: 40),
+          SizedBox(height: 20),
         ],
       ),
     );

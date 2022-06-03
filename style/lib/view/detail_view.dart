@@ -136,6 +136,26 @@ class _DetailViewState extends State<DetailView> {
                     InkWell(
                       onTap: () {
                         // on favorite
+                        FirebaseFirestore.instance
+                            .collection('Ұнағандар')
+                            .doc(FirebaseAuth.instance.currentUser.uid)
+                            .collection('Ұнағандар')
+                            .doc(widget.id)
+                            .set({
+                          'Id': widget.id,
+                          'Название': widget.text,
+                          'Картинка': widget.image,
+                          'Цена': widget.price,
+                          'Описание': widget.description,
+                        });
+
+                        Get.snackbar(
+                          'Ұнағандар',
+                          'Сіз осы тауарды ұнады ' + widget.text,
+                          snackPosition: SnackPosition.TOP,
+                          colorText: Colors.white,
+                          backgroundColor: Colors.black87,
+                        );
                       },
                       child: Icon(
                         Icons.favorite,

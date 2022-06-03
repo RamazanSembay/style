@@ -74,79 +74,81 @@ class _CartViewState extends State<CartView> {
                         ),
                       ],
                     ))
-                  : Container(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemCount: cartProvider.getCartList.length,
-                        itemBuilder: (context, index) {
-                          var data = cartProvider.cartList[index];
-
-                          void quantityFunction() {
-                            FirebaseFirestore.instance
-                                .collection('Себет')
-                                .doc(FirebaseAuth.instance.currentUser.uid)
-                                .collection('Себет')
-                                .doc(data.id)
-                                .update({
-                              'Количество': cart_quantity,
-                            });
-                          }
-
-                          return Product(
-                            image: data.image,
-                            text: data.text,
-                            price: data.price,
-                            count: data.count,
-                            addCount: () {
-                              // count
-
-                              setState(() {
-                                cart_quantity++;
-                                quantityFunction();
-                                print(data.id);
-                              });
-                            },
-                            removeCount: () {
-                              // remove
-
-                              if (cart_quantity > 1) {
-                                setState(() {
-                                  cart_quantity--;
-                                  quantityFunction();
-                                });
-                              }
-                            },
-                            onDelete: () {
-                              // delete
-
+                  : Expanded(
+                    child: Container(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          itemCount: cartProvider.getCartList.length,
+                          itemBuilder: (context, index) {
+                            var data = cartProvider.cartList[index];
+                  
+                            void quantityFunction() {
                               FirebaseFirestore.instance
                                   .collection('Себет')
                                   .doc(FirebaseAuth.instance.currentUser.uid)
                                   .collection('Себет')
                                   .doc(data.id)
-                                  .delete();
-
-                              Get.snackbar(
-                                "Себет",
-                                "Себеттен Өшірдім",
-                                icon: Icon(Icons.delete, color: Colors.black),
-                                snackPosition: SnackPosition.TOP,
-                                backgroundColor: Color(0xffFFDB53),
-                                borderRadius: 5,
-                                margin: EdgeInsets.all(15),
-                                colorText: Colors.black,
-                                duration: Duration(seconds: 3),
-                                isDismissible: true,
-                                dismissDirection: DismissDirection.horizontal,
-                                forwardAnimationCurve: Curves.easeOutBack,
-                              );
-                            },
-                          );
-                        },
+                                  .update({
+                                'Количество': cart_quantity,
+                              });
+                            }
+                  
+                            return Product(
+                              image: data.image,
+                              text: data.text,
+                              price: data.price,
+                              count: data.count,
+                              addCount: () {
+                                // count
+                  
+                                setState(() {
+                                  cart_quantity++;
+                                  quantityFunction();
+                                  print(data.id);
+                                });
+                              },
+                              removeCount: () {
+                                // remove
+                  
+                                if (cart_quantity > 1) {
+                                  setState(() {
+                                    cart_quantity--;
+                                    quantityFunction();
+                                  });
+                                }
+                              },
+                              onDelete: () {
+                                // delete
+                  
+                                FirebaseFirestore.instance
+                                    .collection('Себет')
+                                    .doc(FirebaseAuth.instance.currentUser.uid)
+                                    .collection('Себет')
+                                    .doc(data.id)
+                                    .delete();
+                  
+                                Get.snackbar(
+                                  "Себет",
+                                  "Себеттен Өшірдім",
+                                  icon: Icon(Icons.delete, color: Colors.black),
+                                  snackPosition: SnackPosition.TOP,
+                                  backgroundColor: Color(0xffFFDB53),
+                                  borderRadius: 5,
+                                  margin: EdgeInsets.all(15),
+                                  colorText: Colors.black,
+                                  duration: Duration(seconds: 3),
+                                  isDismissible: true,
+                                  dismissDirection: DismissDirection.horizontal,
+                                  forwardAnimationCurve: Curves.easeOutBack,
+                                );
+                              },
+                            );
+                          },
+                        ),
                       ),
-                    ),
+                  ),
             ),
           ),
         ],
@@ -163,6 +165,8 @@ class Nav extends StatelessWidget {
 
     int totalPrice = cartProvider.subTotal();
     int quantity = cartProvider.subTotal1();
+
+    var formatter = NumberFormat('#,###');
 
     return Container(
       height: 90,
@@ -198,7 +202,8 @@ class Nav extends StatelessWidget {
                         ),
                       )
                     : Text(
-                        '38 940' + ' ₸',
+                        '${formatter.format(totalPrice.toInt()) + ' ₸'}'
+                            .replaceAll(',', ' '),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 15,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:style/provider/cart_provider.dart';
+import 'package:style/provider/favorite_provider.dart';
 import 'package:style/provider/login_provider.dart';
 import 'package:style/provider/register_provider.dart';
 import 'package:style/view/home_view.dart';
@@ -29,6 +30,9 @@ class Application extends StatelessWidget {
         ),
         ChangeNotifierProvider<CartProvider>(
           create: (context) => (CartProvider()),
+        ),
+        ChangeNotifierProvider<FavoriteProvider>(
+          create: (context) => (FavoriteProvider()),
         ),
       ],
       child: GetMaterialApp(

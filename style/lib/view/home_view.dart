@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:style/view/detail_view.dart';
+import 'package:style/view/favotire_view.dart';
 import 'package:style/view/information_view.dart';
 import 'package:style/view/login_view.dart';
 
@@ -88,9 +89,17 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ],
                     ),
-                    Image(
-                      image: AssetImage('images/favorite.png'),
-                      height: 40,
+                    InkWell(
+                      onTap: () {
+                        // on favorite
+                        Get.to(FavoriteView(
+                          title: 'Ұнағандар',
+                        ));
+                      },
+                      child: Image(
+                        image: AssetImage('images/favorite.png'),
+                        height: 40,
+                      ),
                     ),
                   ],
                 ),
