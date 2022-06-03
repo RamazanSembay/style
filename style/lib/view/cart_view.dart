@@ -50,11 +50,9 @@ class _CartViewState extends State<CartView> {
           ),
           SizedBox(height: 30),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: cartProvider.getCartList.isEmpty
-                  ? Center(
-                      child: Column(
+            child: cartProvider.getCartList.isEmpty
+                ? Center(
+                    child: Column(
                       children: [
                         SizedBox(height: 50),
                         SvgPicture.asset(
@@ -73,83 +71,84 @@ class _CartViewState extends State<CartView> {
                           ),
                         ),
                       ],
-                    ))
-                  : Expanded(
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Container(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: BouncingScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          itemCount: cartProvider.getCartList.length,
-                          itemBuilder: (context, index) {
-                            var data = cartProvider.cartList[index];
-                  
-                            void quantityFunction() {
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: cartProvider.getCartList.length,
+                        itemBuilder: (context, index) {
+                          var data = cartProvider.cartList[index];
+
+                          void quantityFunction() {
+                            FirebaseFirestore.instance
+                                .collection('Себет')
+                                .doc(FirebaseAuth.instance.currentUser.uid)
+                                .collection('Себет')
+                                .doc(data.id)
+                                .update({
+                              'Количество': cart_quantity,
+                            });
+                          }
+
+                          return CartProduct(
+                            image: data.image,
+                            text: data.text,
+                            price: data.price,
+                            count: data.count,
+                            addCount: () {
+                              // count
+
+                              setState(() {
+                                cart_quantity++;
+                                quantityFunction();
+                                print(data.id);
+                              });
+                            },
+                            removeCount: () {
+                              // remove
+
+                              if (cart_quantity > 1) {
+                                setState(() {
+                                  cart_quantity--;
+                                  quantityFunction();
+                                });
+                              }
+                            },
+                            onDelete: () {
+                              // delete
+
                               FirebaseFirestore.instance
                                   .collection('Себет')
                                   .doc(FirebaseAuth.instance.currentUser.uid)
                                   .collection('Себет')
                                   .doc(data.id)
-                                  .update({
-                                'Количество': cart_quantity,
-                              });
-                            }
-                  
-                            return Product(
-                              image: data.image,
-                              text: data.text,
-                              price: data.price,
-                              count: data.count,
-                              addCount: () {
-                                // count
-                  
-                                setState(() {
-                                  cart_quantity++;
-                                  quantityFunction();
-                                  print(data.id);
-                                });
-                              },
-                              removeCount: () {
-                                // remove
-                  
-                                if (cart_quantity > 1) {
-                                  setState(() {
-                                    cart_quantity--;
-                                    quantityFunction();
-                                  });
-                                }
-                              },
-                              onDelete: () {
-                                // delete
-                  
-                                FirebaseFirestore.instance
-                                    .collection('Себет')
-                                    .doc(FirebaseAuth.instance.currentUser.uid)
-                                    .collection('Себет')
-                                    .doc(data.id)
-                                    .delete();
-                  
-                                Get.snackbar(
-                                  "Себет",
-                                  "Себеттен Өшірдім",
-                                  icon: Icon(Icons.delete, color: Colors.black),
-                                  snackPosition: SnackPosition.TOP,
-                                  backgroundColor: Color(0xffFFDB53),
-                                  borderRadius: 5,
-                                  margin: EdgeInsets.all(15),
-                                  colorText: Colors.black,
-                                  duration: Duration(seconds: 3),
-                                  isDismissible: true,
-                                  dismissDirection: DismissDirection.horizontal,
-                                  forwardAnimationCurve: Curves.easeOutBack,
-                                );
-                              },
-                            );
-                          },
-                        ),
+                                  .delete();
+
+                              Get.snackbar(
+                                "Себет",
+                                "Себеттен Өшірдім",
+                                icon: Icon(Icons.delete, color: Colors.black),
+                                snackPosition: SnackPosition.TOP,
+                                backgroundColor: Color(0xffFFDB53),
+                                borderRadius: 5,
+                                margin: EdgeInsets.all(15),
+                                colorText: Colors.black,
+                                duration: Duration(seconds: 3),
+                                isDismissible: true,
+                                dismissDirection: DismissDirection.horizontal,
+                                forwardAnimationCurve: Curves.easeOutBack,
+                              );
+                            },
+                          );
+                        },
                       ),
+                    ),
                   ),
-            ),
           ),
         ],
       ),
@@ -244,7 +243,7 @@ class Nav extends StatelessWidget {
   }
 }
 
-class Product extends StatefulWidget {
+class CartProduct extends StatefulWidget {
   final String id;
   final String image;
   final String text;
@@ -255,7 +254,7 @@ class Product extends StatefulWidget {
   final Function removeCount;
   final Function onDelete;
 
-  const Product({
+  const CartProduct({
     Key key,
     this.id,
     this.image,
@@ -268,12 +267,14 @@ class Product extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<Product> createState() => _ProductState();
+  State<CartProduct> createState() => _CartProductState();
 }
 
-class _ProductState extends State<Product> {
+class _CartProductState extends State<CartProduct> {
   @override
   Widget build(BuildContext context) {
+    var formatter = NumberFormat('#,###');
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -355,7 +356,8 @@ class _ProductState extends State<Product> {
               ),
               SizedBox(width: 20),
               Text(
-                widget.price.toString() + ' ₸',
+                '${formatter.format(widget.price.toInt()) + ' ₸'}'
+                    .replaceAll(',', ' '),
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 14,

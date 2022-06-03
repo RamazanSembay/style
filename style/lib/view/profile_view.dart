@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:style/view/edit_view.dart';
 import 'package:style/view/home_view.dart';
 
 class ProfileView extends StatefulWidget {
@@ -54,8 +55,9 @@ class _ProfileViewState extends State<ProfileView> {
           // Account name
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   vendorData != null ? vendorData.data()['Имя'] : '',
@@ -64,6 +66,17 @@ class _ProfileViewState extends State<ProfileView> {
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Montserrat',
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    // on edit
+                    Get.to(EditView());
+                  },
+                  child: Icon(
+                    Icons.edit,
+                    size: 24,
+                    color: Colors.black,
                   ),
                 ),
               ],
@@ -103,9 +116,7 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                         ),
                         Text(
-                          vendorData != null
-                              ? vendorData.data()['Город']
-                              : '',
+                          vendorData != null ? vendorData.data()['Город'] : '',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
@@ -129,9 +140,7 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                         ),
                         Text(
-                          vendorData != null
-                              ? vendorData.data()['Адрес']
-                              : '',
+                          vendorData != null ? vendorData.data()['Адрес'] : '',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
@@ -155,9 +164,7 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                         ),
                         Text(
-                          vendorData != null
-                              ? vendorData.data()['Дом']
-                              : '',
+                          vendorData != null ? vendorData.data()['Дом'] : '',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,

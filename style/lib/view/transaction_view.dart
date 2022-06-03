@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -140,9 +142,48 @@ class _TransactionViewState extends State<TransactionView> {
   }
 }
 
-class Nav extends StatelessWidget {
+class Nav extends StatefulWidget {
+  @override
+  State<Nav> createState() => _NavState();
+}
+
+class _NavState extends State<Nav> {
+  User user = FirebaseAuth.instance.currentUser;
+
+  DocumentSnapshot vendorData;
+
+  @override
+  void initState() {
+    getVendorData();
+    super.initState();
+  }
+
+  Future<DocumentSnapshot> getVendorData() async {
+    var result = await FirebaseFirestore.instance
+        .collection('Пользователь')
+        .doc(user.uid)
+        .get();
+    setState(() {
+      vendorData = result;
+    });
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+    cartProvider.getCartData();
+
+    int totalPrice = cartProvider.subTotal();
+    int quantity = cartProvider.subTotal1();
+
+    if (cartProvider.getCartList.isEmpty) {
+      setState(() {
+        totalPrice = 0;
+      });
+    }
+    var formatter = NumberFormat('#,###');
+
     return Container(
       height: 250,
       width: double.infinity,
@@ -179,7 +220,7 @@ class Nav extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Алматы',
+                      vendorData != null ? vendorData.data()['Город'] : '',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -203,7 +244,7 @@ class Nav extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Аль-Фараби 173',
+                      vendorData != null ? vendorData.data()['Адрес'] : '',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -227,7 +268,7 @@ class Nav extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '109',
+                      vendorData != null ? vendorData.data()['Дом'] : '',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -261,7 +302,8 @@ class Nav extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '38 940' + ' ₸',
+                      '${formatter.format(totalPrice.toInt()) + ' ₸'}'
+                          .replaceAll(',', ' '),
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,

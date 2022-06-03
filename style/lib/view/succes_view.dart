@@ -1,12 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:style/provider/cart_provider.dart';
 import 'package:style/view/cart_view.dart';
 import 'package:style/view/home_view.dart';
 import 'package:style/widget/nav_bar.dart';
 
-class SuccessView extends StatelessWidget {
+import 'package:intl/intl.dart';
+
+class SuccessView extends StatefulWidget {
+  @override
+  State<SuccessView> createState() => _SuccessViewState();
+}
+
+class _SuccessViewState extends State<SuccessView> {
   @override
   Widget build(BuildContext context) {
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+    cartProvider.getCartData();
+
+    int totalPrice = cartProvider.subTotal();
+    int quantity = cartProvider.subTotal1();
+
+    if (cartProvider.getCartList.isEmpty) {
+      setState(() {
+        totalPrice = 0;
+      });
+    }
+    var formatter = NumberFormat('#,###');
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -48,7 +69,8 @@ class SuccessView extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      '38 940' + ' ₸',
+                      '${formatter.format(totalPrice.toInt()) + ' ₸'}'
+                          .replaceAll(',', ' '),
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 24,

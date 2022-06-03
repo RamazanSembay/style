@@ -64,11 +64,9 @@ class _FavoriteViewState extends State<FavoriteView> {
           ),
           SizedBox(height: 20),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: favoriteProvider.getFavoriteList.isEmpty
-                  ? Center(
-                      child: Column(
+            child: favoriteProvider.getFavoriteList.isEmpty
+                ? Center(
+                    child: Column(
                       children: [
                         SizedBox(height: 50),
                         SvgPicture.asset(
@@ -87,8 +85,11 @@ class _FavoriteViewState extends State<FavoriteView> {
                           ),
                         ),
                       ],
-                    ))
-                  : Expanded(
+                    ),
+                  )
+                : Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Container(
                         child: ListView.builder(
                           shrinkWrap: true,
@@ -163,7 +164,7 @@ class _FavoriteViewState extends State<FavoriteView> {
                         ),
                       ),
                     ),
-            ),
+                  ),
           ),
         ],
       ),

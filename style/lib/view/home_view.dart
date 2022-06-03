@@ -79,7 +79,7 @@ class _HomeViewState extends State<HomeView> {
                         Text(
                           vendorData != null
                               ? vendorData.data()['Город']
-                              : 'Толтырыңыз',
+                              : '',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 18,
