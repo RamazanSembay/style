@@ -8,50 +8,47 @@ class CartView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: Nav(),
-      body: ListView(
-        physics: BouncingScrollPhysics(),
+      body: Column(
         children: [
-          Column(
-            children: [
-              SizedBox(height: 40),
-              Text(
-                'Себет',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Montserrat',
+          SizedBox(height: 50),
+          Text(
+            'Себет',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Montserrat',
+            ),
+          ),
+          SizedBox(height: 30),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                child: Column(
+                  children: [
+                    Product(
+                      image:
+                          'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/trousers/113828/6280dfda9b8dc-13-05-20223711.jpg',
+                      text: 'Шорты джинсовые мини',
+                      price: 6980,
+                    ),
+                    Product(
+                      image:
+                          'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/trousers/113275/62827d1026dfc-13-05-20223052.jpg',
+                      text: 'Брюки прямые мужского кроя',
+                      price: 10980,
+                    ),
+                    Product(
+                      image:
+                          'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/trousers/113828/6280dfda9b8dc-13-05-20223711.jpg',
+                      text: 'Шорты джинсовые мини',
+                      price: 6980,
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Expanded(
-                  child: Column(
-                    children: [
-                      Product(
-                        image:
-                            'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/trousers/113828/6280dfda9b8dc-13-05-20223711.jpg',
-                        text: 'Шорты джинсовые мини',
-                        price: 6980,
-                      ),
-                      Product(
-                        image:
-                            'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/trousers/113275/62827d1026dfc-13-05-20223052.jpg',
-                        text: 'Брюки прямые мужского кроя',
-                        price: 10980,
-                      ),
-                      Product(
-                        image:
-                            'https://image.12storeez.com/images/750xP_90_out/uploads/images/CATALOG/trousers/113828/6280dfda9b8dc-13-05-20223711.jpg',
-                        text: 'Шорты джинсовые мини',
-                        price: 6980,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),

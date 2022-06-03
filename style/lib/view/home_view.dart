@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:style/view/detail_view.dart';
 import 'package:style/view/information_view.dart';
 import 'package:style/view/login_view.dart';
 
@@ -88,7 +89,7 @@ class _HomeViewState extends State<HomeView> {
                       ],
                     ),
                     Image(
-                      image: AssetImage('images/cart.png'),
+                      image: AssetImage('images/favorite.png'),
                       height: 40,
                     ),
                   ],
@@ -247,7 +248,10 @@ class _HomeViewState extends State<HomeView> {
                                     image: data['Картинка'],
                                     text: data['Название'],
                                     price: data['Цена'],
-                                    onTap: () {},
+                                    onTap: () {
+                                      // on detail
+                                      Get.to(DetailView());
+                                    },
                                   ),
                                 ],
                               );
