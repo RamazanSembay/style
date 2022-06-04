@@ -200,51 +200,51 @@ class _ProfileViewState extends State<ProfileView> {
                 Column(
                   children: [
                     // Менің төлемдерім
-                    InkWell(
-                      onTap: () {
-                        // on success
-                        Get.to(MySuccessView());
-                      },
-                      child: Row(
-                        children: [
-                          Image(
-                            image: AssetImage('images/payment.png'),
-                            height: 50,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Container(
-                                height: 50,
-                                width: double.infinity,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Менің төлемдерім',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Icon(
-                            Icons.navigate_next,
-                            size: 20,
-                            color: Colors.black,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20),
+                    // InkWell(
+                    //   onTap: () {
+                    //     // on success
+                    //     Get.to(MySuccessView());
+                    //   },
+                    //   child: Row(
+                    //     children: [
+                    //       Image(
+                    //         image: AssetImage('images/payment.png'),
+                    //         height: 50,
+                    //       ),
+                    //       Expanded(
+                    //         child: Padding(
+                    //           padding:
+                    //               const EdgeInsets.symmetric(horizontal: 20),
+                    //           child: Container(
+                    //             height: 50,
+                    //             width: double.infinity,
+                    //             child: Column(
+                    //               crossAxisAlignment: CrossAxisAlignment.start,
+                    //               mainAxisAlignment: MainAxisAlignment.center,
+                    //               children: [
+                    //                 Text(
+                    //                   'Менің төлемдерім',
+                    //                   style: TextStyle(
+                    //                     color: Colors.black,
+                    //                     fontSize: 15,
+                    //                     fontWeight: FontWeight.w600,
+                    //                     fontFamily: 'Montserrat',
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Icon(
+                    //         Icons.navigate_next,
+                    //         size: 20,
+                    //         color: Colors.black,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // SizedBox(height: 20),
 
                     // Менің тапсырыстарым
                     InkWell(

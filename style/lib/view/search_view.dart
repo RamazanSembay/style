@@ -13,6 +13,18 @@ class SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<SearchView> {
+  String query = '';
+  var result;
+  searchFunction(query, searchList) {
+    result = searchList.where((element) {
+      return element["Название"].toUpperCase().contains(query) ||
+          element["Название"].toLowerCase().contains(query) ||
+          element["Название"].toUpperCase().contains(query) &&
+              element["Название"].toLowerCase().contains(query);
+    }).toList();
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     var formatter = NumberFormat('#,###');
@@ -45,28 +57,32 @@ class _SearchViewState extends State<SearchView> {
                 color: Color(0xffEEEEEE),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.search,
-                      color: Color(0xff888888),
-                      size: 24,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'Іздеу',
-                      style: TextStyle(
-                        color: Color(0xff888888),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Montserrat',
-                      ),
-                    ),
-                  ],
+              child: TextFormField(
+                onChanged: (value) {
+                  setState(() {
+                    query = value;
+                  });
+                },
+                style: TextStyle(
+                  color: Color(0xff888888),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Montserrat',
+                ),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(20),
+                  border: InputBorder.none,
+                  hintText: 'Іздеу',
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Color(0xff999999),
+                  ),
+                  hintStyle: TextStyle(
+                    color: Color(0xff888888),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Montserrat',
+                  ),
                 ),
               ),
             ),
@@ -80,7 +96,7 @@ class _SearchViewState extends State<SearchView> {
                   children: [
                     FutureBuilder<QuerySnapshot>(
                       future: FirebaseFirestore.instance
-                          .collection('Ерлерге')
+                          .collection('Қазір Трендте')
                           .get(),
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -96,31 +112,74 @@ class _SearchViewState extends State<SearchView> {
                           );
                         }
 
-                        return StaggeredGridView.countBuilder(
-                          shrinkWrap: true,
-                          crossAxisCount: 2,
-                          itemCount: snapshot.data.docs.length,
-                          staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                          mainAxisSpacing: 15.0,
-                          crossAxisSpacing: 15.0,
-                          itemBuilder: (context, index) {
-                            var data = snapshot.data.docs[index];
-                            return Product(
-                              image: data['Картинка'],
-                              text: data['Название'],
-                              price: data['Цена'],
-                              onTap: () {
-                                // on detail
-                                Get.to(DetailView(
-                                  id: data['Id'],
-                                  image: data['Картинка'],
-                                  text: data['Название'],
-                                  price: data['Цена'],
-                                  description: data['Описание'],
-                                ));
-                              },
-                            );
-                          },
+                        return Expanded(
+                          child: Container(
+                            child: query == ''
+                                ? StaggeredGridView.countBuilder(
+                                    shrinkWrap: true,
+                                    crossAxisCount: 2,
+                                    itemCount: snapshot.data.docs.length,
+                                    staggeredTileBuilder: (index) =>
+                                        StaggeredTile.fit(1),
+                                    mainAxisSpacing: 15.0,
+                                    crossAxisSpacing: 15.0,
+                                    itemBuilder: (context, index) {
+                                      var varData = searchFunction(
+                                          query, snapshot.data.docs);
+
+                                      var data = varData[index];
+
+                                      return Product(
+                                        image: data['Картинка'],
+                                        text: data['Название'],
+                                        price: data['Цена'],
+                                        onTap: () {
+                                          // on detail
+                                          Get.to(DetailView(
+                                            id: data['Id'],
+                                            image: data['Картинка'],
+                                            text: data['Название'],
+                                            price: data['Цена'],
+                                            description: data['Описание'],
+                                          ));
+                                        },
+                                      );
+                                    },
+                                  )
+                                : StaggeredGridView.countBuilder(
+                                    shrinkWrap: true,
+                                    crossAxisCount: 2,
+                                    itemCount: snapshot.data.docs.length,
+                                    staggeredTileBuilder: (index) =>
+                                        StaggeredTile.fit(1),
+                                    mainAxisSpacing: 15.0,
+                                    crossAxisSpacing: 15.0,
+                                    itemBuilder: (context, index) {
+                                      var varData = searchFunction(
+                                          query, snapshot.data.docs);
+
+                                      var data = varData[index];
+
+                                      return result.isEmpty
+                                          ? Container()
+                                          : Product(
+                                              image: data['Картинка'],
+                                              text: data['Название'],
+                                              price: data['Цена'],
+                                              onTap: () {
+                                                // on detail
+                                                Get.to(DetailView(
+                                                  id: data['Id'],
+                                                  image: data['Картинка'],
+                                                  text: data['Название'],
+                                                  price: data['Цена'],
+                                                  description: data['Описание'],
+                                                ));
+                                              },
+                                            );
+                                    },
+                                  ),
+                          ),
                         );
                       },
                     ),
