@@ -95,12 +95,13 @@ class _InformationViewState extends State<InformationView> {
                               shrinkWrap: true,
                               crossAxisCount: 2,
                               itemCount: snapshot.data.docs.length,
-                              staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                              staggeredTileBuilder: (index) =>
+                                  StaggeredTile.fit(1),
                               mainAxisSpacing: 15.0,
                               crossAxisSpacing: 15.0,
                               itemBuilder: (context, index) {
                                 var data = snapshot.data.docs[index];
-                          
+
                                 return InfoProduct(
                                   image: data['Картинка'],
                                   text: data['Название'],
